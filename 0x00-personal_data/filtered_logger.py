@@ -6,7 +6,7 @@ import logging
 import mysql.connector
 import os
 
-PII_FIELDS = ('name', 'email', 'ip', 'phone', 'password')
+PII_FIELDS = ('name', 'email', 'ssn', 'phone', 'password')
 
 
 def filter_datum(
@@ -51,14 +51,14 @@ class RedactingFormatter(logging.Formatter):
 
 def get_logger() -> logging.Logger:
     """A function that creates a logger object."""
-    user_data = logging.getLogger('user_data')
-    user_data.setLevel(logging.INFO)
-    user_data.propagate = False
+    logger = logging.getLogger('user_data')
+    logger.setLevel(logging.INFO)
     stream_handler = logging.StreamHandler()
     stream_handler.setLevel(logging.INFO)
     stream_handler.setFormatter(RedactingFormatter(PII_FIELDS))
-    user_data.addHandler(stream_handler)
-    return user_data
+    logger.addHandler(stream_handler)
+    logger.propagate = False
+    return logger
 
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
@@ -72,3 +72,30 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         database=database
         )
     return connection
+
+
+def main() -> None:
+    """A function that queries a database and prints the result."""
+    #  get logger object
+    logger = get_logger()
+    #  retrieve rows from a table in a database
+    with get_db() as connection:
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM users')
+        rows = cursor.fetchall()
+        message_field = (
+            'name', 'email', 'phone', 'ssn',
+            'password', 'ip', 'last_login',
+            'user_agent'
+            )
+        log_message = ''
+        for row in rows:
+            field_and_value = zip(message_field, row)
+            for data in field_and_value:
+                field, value = data
+                log_message += f'{field}={value};'
+            logger.info(log_message)
+
+
+if __name__ == '__main__':
+    main()
