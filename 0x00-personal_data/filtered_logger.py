@@ -25,8 +25,9 @@ def filter_datum(
 
 
 class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class
-        """
+    """ 
+        Redacting Formatter class
+    """
 
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
@@ -35,7 +36,7 @@ class RedactingFormatter(logging.Formatter):
     def __init__(self, fields):
         """An initialization method that initializes the class instance."""
         super(RedactingFormatter, self).__init__(self.FORMAT)
-        self.fields = list(fields)
+        self.fields = fields
 
     def format(self, record: logging.LogRecord) -> str:
         """A method that formats the log record."""
