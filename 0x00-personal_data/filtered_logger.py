@@ -63,10 +63,10 @@ def get_logger() -> logging.Logger:
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """A function that returns a connection object to a database."""
-    host = os.environ.get('PERSONAL_DATA_DB_HOST', 'localhost')
-    password = os.environ.get('PERSONAL_DATA_DB_PASSWORD', '')
-    user_name = os.environ.get('PERSONAL_DATA_DB_USERNAME', 'root')
-    database = os.environ.get('PERSONAL_DATA_DB_NAME')
+    host: str = os.environ.get('PERSONAL_DATA_DB_HOST', 'localhost')
+    password: str = os.environ.get('PERSONAL_DATA_DB_PASSWORD', '')
+    user_name: str = os.environ.get('PERSONAL_DATA_DB_USERNAME', 'root')
+    database: str = os.environ.get('PERSONAL_DATA_DB_NAME')
     connection = mysql.connector.connect(
         host=host, password=password, username=user_name,
         database=database
@@ -95,6 +95,7 @@ def main() -> None:
                 field, value = data
                 log_message += f'{field}={value};'
             logger.info(log_message)
+        connection.close()
 
 
 if __name__ == '__main__':
