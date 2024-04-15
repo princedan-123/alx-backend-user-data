@@ -21,6 +21,7 @@ if auth_type == 'auth':
 
 @app.before_request
 def before_each_request():
+    """A function executed before each request is handled."""
     if auth is None:
         return
     exempted_list = [
