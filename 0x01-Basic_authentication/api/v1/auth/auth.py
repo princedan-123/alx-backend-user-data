@@ -20,6 +20,11 @@ class Auth:
             return True
         elif len(excluded_paths) == 0:
             return True
+        for url_path in excluded_paths:
+            if url_path.endswith('*'):
+                initial_segment = url_path[:-1]
+                if path.startswith(initial_segment)
+                return False
         if not path.endswith('/'):
             path = path + '/'
         if path in excluded_paths:
