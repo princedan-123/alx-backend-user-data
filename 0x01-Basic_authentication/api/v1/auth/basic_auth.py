@@ -36,3 +36,16 @@ class BasicAuth(Auth):
             return string
         except Exception as error:
             return None
+
+    def extract_user_credentials(
+            self, decoded_base64_authorization_header: str
+            ) -> (str, str):
+        """A public method that extracts fields from a decoded base64."""
+        if decoded_base64_authorization_header is None:
+            return None, None
+        if not isinstance(decoded_base64_authorization_header, str):
+            return None, None
+        if ':' not in decoded_base64_authorization_header:
+            return None, None
+        fields = decoded_base64_authorization_header.split(':')
+        return tuple(fields)
