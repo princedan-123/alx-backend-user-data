@@ -4,6 +4,7 @@ A script that creates a class that will be used for session authentication.
 """
 import uuid
 from api.v1.auth.auth import Auth
+from models.user import User
 
 
 class SessionAuth(Auth):
@@ -27,3 +28,9 @@ class SessionAuth(Auth):
         if not isinstance(session_id, str):
             return None
         return self.user_id_by_session_id.get(session_id, None)
+    
+    def current_user(self, request=None):
+        """A method that retrieves a user based on its id."""
+        session_id = self.session_cookie(request)
+        user_id = self.user_id_for_session_id(session_id)
+        return User.get(str(user_id))
