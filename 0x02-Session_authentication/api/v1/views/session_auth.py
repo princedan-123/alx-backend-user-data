@@ -24,17 +24,17 @@ def login_session():
     if not users:
         return jsonify({"error": "no user found for this email"}), 404
     for user in users:
-        valid = user.is_valid_password(password)
+        valid = user.is_valid_password(str(password))
         if valid:
             from api.v1.app import auth
-            session_id = auth.create_session(user.get('id'))
+            user_id = user.id
+            session_id = auth.create_session(user_id)
             cookie_name = os.getenv('SESSION_NAME')
             user_dict = user.to_json()
             response = jsonify(user_dict)
             response.set_cookie(cookie_name, session_id)
             return response
-        return jsonify({"error": "wrong password"}), 401
-    return jsonify({"error": "no user found for this email"}), 404
+    return jsonify({"error": "wrong password"}), 401
 
 
 @app_views.route(
