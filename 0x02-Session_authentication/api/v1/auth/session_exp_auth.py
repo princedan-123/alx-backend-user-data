@@ -7,6 +7,7 @@ from api.v1.auth.session_auth import SessionAuth
 
 
 class SessionExpAuth(SessionAuth):
+    """An implementation of a session with expiration time."""
     def __init__(self):
         """An initialization method."""
         try:
