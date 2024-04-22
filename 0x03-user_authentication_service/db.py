@@ -5,7 +5,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from sqlalchemy.exc import NoResultFound, InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import InvalidRequestError
 
 from user import Base, User
 
@@ -45,10 +46,6 @@ class DB:
         with which it filters a query.
         """
         session = self._session
-        keys = list(kwargs.keys())
-        key = keys[0]
-        values = list(kwargs.values())
-        value = values[0]
         try:
             query = session.query(User).filter_by(**kwargs).first()
             if not query:
@@ -56,3 +53,13 @@ class DB:
         except AttributeError as error:
             raise InvalidRequestError()
         return query
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """A method that updates a row in the database."""
+        session = self._session
+        try:
+            row = self.find_user_by(id=user_id)
+            for attribute, value in kwargs.items():
+                setattr(row, attribute, value)
+        except AttributeError as error:
+            raise ValueError()
