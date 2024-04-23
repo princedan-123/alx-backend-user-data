@@ -41,7 +41,7 @@ class DB:
         session.commit()
         return row
 
-    def find_user_by(self, **kwargs):
+    def find_user_by(self, **kwargs) -> User:
         """
         A method that takes arbitrary keyword argument,
         with which it filters a query.
