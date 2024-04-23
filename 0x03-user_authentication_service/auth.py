@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """A module for authentication."""
 import bcrypt
+import uuid
 from sqlalchemy.orm.exc import NoResultFound
 from user import User
 from db import DB
@@ -39,6 +40,7 @@ class Auth:
         """
         try:
             user = self._db.find_user_by(email=email)
+            password = password.encode('utf-8')
             if user:
                 if bcrypt.checkpw(password, user.hashed_password):
                     return True
@@ -47,3 +49,21 @@ class Auth:
             return False
         except Exception as error:
             return False
+
+    def _generate_uuid(self) -> str:
+        """A method that generates and returns a unique string."""
+        return str(uuid.uuid4())
+
+    def create_session(self, email: str) -> str:
+        """
+        A method that generates a session id for a user for session based
+        authentication.
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+            if user:
+                session_id = self._generate_uuid()
+                user.session_id = session_id
+                return session_id
+        except Exception:
+            pass
