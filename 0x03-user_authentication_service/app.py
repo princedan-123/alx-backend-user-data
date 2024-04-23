@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """A simple flask app"""
-from flask import Flask, jsonify, request, abort, url_for, redirect
+from flask import Flask, jsonify, request, abort, redirect
 from auth import Auth
 from db import DB
 
@@ -51,7 +51,7 @@ def logout():
     try:
         user = db.find_user_by(session_id=session_id)
         AUTH.destroy_session(user.id)
-        return redirect(url_for('root'))
+        return redirect('/')
     except Exception:
         abort(403)
 
