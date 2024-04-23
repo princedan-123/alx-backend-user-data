@@ -62,5 +62,6 @@ class DB:
             row = self.find_user_by(id=user_id)
             for attribute, value in kwargs.items():
                 setattr(row, attribute, value)
+            session.commit()
         except AttributeError as error:
             raise ValueError()
