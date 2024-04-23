@@ -78,7 +78,7 @@ class Auth:
             return user
         except Exception as error:
             return None
-    
+
     def destroy_session(self, user_id: int) -> None:
         """A method that removes the session id of a user during log out."""
         self._db.update_user(user_id, session_id=None)
