@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """A simple flask app"""
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, url_for, redirect
 from auth import Auth
+from db import DB
 
 app = Flask(__name__)
 AUTH = Auth()
+db = DB()
 
 
 @app.route('/')
@@ -40,6 +42,18 @@ def login():
         return response
     else:
         return abort(401)
+
+
+@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
+def logout():
+    """A route that implements a simple log out."""
+    session_id = request.cookies.get('session_id')
+    try:
+        user = db.find_user_by(session_id=session_id)
+        AUTH.destroy_session(user.id)
+        redirect(url_for(root))
+    except Exception:
+        abort(403)
 
 
 if __name__ == "__main__":
