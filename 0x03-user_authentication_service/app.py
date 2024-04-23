@@ -48,6 +48,8 @@ def login():
 def logout():
     """A route that implements a simple log out."""
     session_id = request.cookies.get('session_id')
+    if session_id is None:
+        abort(403)
     try:
         user = db.find_user_by(session_id=session_id)
         AUTH.destroy_session(user.id)
