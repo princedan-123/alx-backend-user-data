@@ -14,6 +14,11 @@ def _hash_password(password: str) -> bytes:
     return hashed_password
 
 
+def _generate_uuid() -> str:
+    """A method that generates and returns a unique string."""
+    return str(uuid.uuid4())
+
+
 class Auth:
     """Auth class to interact with the authentication database.
     """
@@ -50,10 +55,6 @@ class Auth:
         except Exception as error:
             return False
 
-    def _generate_uuid(self) -> str:
-        """A method that generates and returns a unique string."""
-        return str(uuid.uuid4())
-
     def create_session(self, email: str) -> str:
         """
         A method that generates a session id for a user for session based
@@ -62,7 +63,7 @@ class Auth:
         try:
             user = self._db.find_user_by(email=email)
             if user:
-                session_id = self._generate_uuid()
+                session_id = _generate_uuid()
                 user.session_id = session_id
                 return session_id
         except Exception:
