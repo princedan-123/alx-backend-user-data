@@ -51,7 +51,7 @@ def logout():
     try:
         user = db.find_user_by(session_id=session_id)
         AUTH.destroy_session(user.id)
-        redirect(url_for(root))
+        return redirect(url_for('root'))
     except Exception:
         abort(403)
 
