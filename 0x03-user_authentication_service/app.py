@@ -25,7 +25,7 @@ def users():
     password = request.form.get('password')
     try:
         AUTH.register_user(email, password)
-        return jsonify({"email": f"{email}", "message": "user created"})
+        return jsonify({"email": email, "message": "user created"})
     except ValueError as error:
         return jsonify({"message": "email already registered"}), 400
 
@@ -37,7 +37,7 @@ def login():
     password = request.form.get('password')
     if AUTH.valid_login(email, password):
         session_id = AUTH.create_session(email)
-        response = jsonify({"email": f"{email}", "message": "logged in"})
+        response = jsonify({"email": email, "message": "logged in"})
         response.set_cookie('session_id', session_id)
         return response
     else:
@@ -66,7 +66,7 @@ def profile():
         abort(403)
     try:
         user = db.find_user_by(session_id=session_id)
-        return jsonify({"email": f"{email}"}), 200
+        return jsonify({"email": user.email}), 200
     except Exception:
         abort(403)
 
