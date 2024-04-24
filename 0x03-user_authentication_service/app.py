@@ -79,7 +79,7 @@ def get_reset_password_token():
         user = db.find_user_by(email=email)
         reset_token = AUTH.get_reset_password_token(email)
         return jsonify(
-            {"email": f"{email}", "reset_token": "<reset token>"}
+            {"email": f"{email}", "reset_token": f"{reset_token}"}
             ), 200
 
     except Exception:
