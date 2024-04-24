@@ -92,5 +92,24 @@ class Auth:
             user = self._db.find_user_by(email=email)
             reset_password = _generate_uuid()
             user.reset_token = reset_password
+            return reset_password
+        except Exception:
+            raise ValueError()
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        """A method that updates a user's password."""
+        if reset_token is None or password is None:
+            raise ValueError()
+        if not isinstance(reset_token, str):
+            raise ValueError()
+        if not isinstance(password, str):
+            raise ValueError()
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+            password = password.encode('utf-8')
+            new_password = bcrypt.hashpw(password, bcrypt.gensalt())
+            self._db.update_user(
+                user.id, hashed_password=new_password, reset_token=None
+                )
         except Exception:
             raise ValueError()
