@@ -86,7 +86,7 @@ def get_reset_password_token():
         raise abort(403)
 
 
-@app.route('/reset_password', method=['PUT'], strict_slashes=False)
+@app.route('/reset_password', methods=['PUT'], strict_slashes=False)
 def update_password():
     """
     A route that updates a user's password in case of forgotten password.
