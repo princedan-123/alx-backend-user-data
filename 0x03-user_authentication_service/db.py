@@ -59,9 +59,13 @@ class DB:
         """A method that updates a row in the database."""
         session = self._session
         try:
-            row = self.find_user_by(id=user_id)
+            user = self.find_user_by(id=user_id)
+            user_attribute = user.__dict__
             for attribute, value in kwargs.items():
-                setattr(row, attribute, value)
+                if attribute in user_attribute:
+                    setattr(user, attribute, value)
+                else:
+                    raise ValueError()
             session.commit()
         except AttributeError as error:
             raise ValueError()
